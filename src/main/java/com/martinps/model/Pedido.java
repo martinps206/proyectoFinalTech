@@ -3,6 +3,7 @@ package com.martinps.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,7 +18,7 @@ public class Pedido {
     private EstadoPedido estado = EstadoPedido.PENDIENTE;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<LineaPedido> lineas;
+    private List<LineaPedido> lineas = new ArrayList<>();
 
 
     public double getTotal() {
@@ -50,6 +51,11 @@ public class Pedido {
         this.lineas = lineas;
     }
 
+    public EstadoPedido getEstado() {
+        return estado;
+    }
 
-
+    public void setEstado(EstadoPedido estado) {
+        this.estado = estado;
+    }
 }

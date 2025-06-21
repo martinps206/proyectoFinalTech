@@ -1,13 +1,17 @@
 package com.martinps.service;
 
+import com.martinps.dto.PedidoDTO;
 import com.martinps.exception.StockInsuficienteException;
+import com.martinps.model.EstadoPedido;
 import com.martinps.model.LineaPedido;
 import com.martinps.model.Pedido;
 import com.martinps.model.Producto;
 import com.martinps.repository.PedidoRepository;
 import jakarta.transaction.Transactional;
+import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,8 +25,14 @@ public class PedidoService {
         this.productoService = productoService;
     }
 
+    @Transactional()
+    public List<Pedido> listar() {
+        return pedidoRepo.findAll();
+    }
+
+
     @Transactional
-    public Pedido crearPedido(Pedido pedido) {
+    public Pedido guardar(Pedido pedido) {
         if (pedido.getLineas() == null || pedido.getLineas().isEmpty()) {
             throw new IllegalArgumentException("El pedido debe tener al menos una línea");
         }
@@ -41,8 +51,5 @@ public class PedidoService {
         return pedidoRepo.save(pedido);
     }
 
-    @Transactional()
-    public List<Pedido> listar() {
-        return pedidoRepo.findAll();
-    }
+
 }

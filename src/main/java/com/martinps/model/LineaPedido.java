@@ -14,6 +14,13 @@ public class LineaPedido {
 
     private int cantidad;
 
+    public LineaPedido(Producto p, int cantidad) {
+    }
+
+    public LineaPedido() {
+
+    }
+
     public Long getId() {
         return id;
     }
