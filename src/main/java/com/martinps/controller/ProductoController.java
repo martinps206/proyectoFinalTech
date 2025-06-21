@@ -2,6 +2,7 @@ package com.martinps.controller;
 
 import com.martinps.model.Producto;
 import com.martinps.request.ProductoRequest;
+import com.martinps.response.ProductoResponse;
 import com.martinps.service.ProductoService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +20,22 @@ public class ProductoController {
         this.service = service;
     }
 
+
     @GetMapping
-    public List<Producto> listar() {
-        return service.listar();
+    public List<ProductoResponse> listar() {
+        return service.listar().stream().map(this::toResponse).toList();
+    }
+
+    private ProductoResponse toResponse(Producto p) {
+        ProductoResponse dto = new ProductoResponse();
+        dto.setId(p.getId());
+        dto.setNombre(p.getNombre());
+        dto.setDescripcion(p.getDescripcion());
+        dto.setPrecio(p.getPrecio());
+        dto.setCategoria(p.getCategoria());
+        dto.setImagenUrl(p.getImagenUrl());
+        dto.setStock(p.getStock());
+        return dto;
     }
 
     @GetMapping("/{id}")

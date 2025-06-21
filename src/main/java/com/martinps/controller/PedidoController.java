@@ -2,6 +2,7 @@ package com.martinps.controller;
 
 import com.martinps.model.Pedido;
 import com.martinps.service.PedidoService;
+import jakarta.transaction.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class PedidoController {
     public Pedido crear(@RequestBody Pedido pedido) {
         return service.crearPedido(pedido);
     }
+
 
     @GetMapping
     public List<Pedido> listar() {

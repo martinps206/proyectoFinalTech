@@ -13,12 +13,13 @@ public class Pedido {
     private Long id;
 
     private LocalDateTime fecha = LocalDateTime.now();
-    private String estado = "pendiente";
+    @Enumerated(EnumType.STRING)
+    private EstadoPedido estado = EstadoPedido.PENDIENTE;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<LineaPedido> lineas;
 
-    // Método para calcular el total
+
     public double getTotal() {
         return lineas.stream()
                 .mapToDouble(lp -> lp.getProducto().getPrecio() * lp.getCantidad())
@@ -41,14 +42,6 @@ public class Pedido {
         this.fecha = fecha;
     }
 
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
     public List<LineaPedido> getLineas() {
         return lineas;
     }
@@ -56,4 +49,7 @@ public class Pedido {
     public void setLineas(List<LineaPedido> lineas) {
         this.lineas = lineas;
     }
+
+
+
 }

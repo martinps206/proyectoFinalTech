@@ -1,24 +1,13 @@
-package com.martinps.model;
+package com.martinps.response;
 
-
-import jakarta.persistence.*;
-
-@Entity
-public class Producto {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ProductoResponse {
     private Long id;
-
     private String nombre;
     private String descripcion;
     private double precio;
     private String categoria;
     private String imagenUrl;
     private int stock;
-    @Version
-    private Long version;
-
 
     public Long getId() {
         return id;
