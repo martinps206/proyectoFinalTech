@@ -1,7 +1,9 @@
 package com.martinps.controller;
 
 import com.martinps.model.Producto;
+import com.martinps.request.ProductoRequest;
 import com.martinps.service.ProductoService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,8 +30,10 @@ public class ProductoController {
     }
 
     @PostMapping
-    public Producto crear(@RequestBody Producto producto) {
-        return service.guardar(producto);
+    public Producto crear(@RequestBody @Valid ProductoRequest request) {
+        Producto p = new Producto();
+        p.setNombre(request.getNombre());
+        return service.guardar(p);
     }
 
     @PutMapping("/{id}")
