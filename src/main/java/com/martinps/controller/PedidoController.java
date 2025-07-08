@@ -2,10 +2,12 @@ package com.martinps.controller;
 
 import com.martinps.config.PedidoMapper;
 import com.martinps.model.Pedido;
-import com.martinps.request.PedidoRequest;
-import com.martinps.response.PedidoResponse;
+import com.martinps.dto.request.PedidoRequest;
+import com.martinps.dto.response.PedidoResponse;
 import com.martinps.service.PedidoService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,14 +26,30 @@ public class PedidoController {
     }
 
     @GetMapping
-    public List<PedidoResponse> listar() {
-        return service.listar().stream().map(mapper::toDto).toList();
+    public ResponseEntity<List<PedidoResponse>> listar() {
+        List<PedidoResponse> response = service.listar().stream().map(mapper::toDto).toList();
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    public PedidoResponse crear(@RequestBody @Valid PedidoRequest request) {
-        Pedido p = mapper.toEntity(request);
-        Pedido creado = service.guardar(p);
-        return mapper.toDto(creado);
+    public ResponseEntity<PedidoResponse> crear(@RequestBody @Valid PedidoRequest request) {
+        Pedido pedido = mapper.toEntity(request);
+        Pedido creado = service.guardar(pedido);
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toDto(creado));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PedidoResponse> actualizar(
+            @PathVariable Long id,
+            @RequestBody @Valid PedidoRequest request) {
+        Pedido actualizado = service.actualizar(id, request);
+        return ResponseEntity.ok(mapper.toDto(actualizado));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        service.eliminar(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

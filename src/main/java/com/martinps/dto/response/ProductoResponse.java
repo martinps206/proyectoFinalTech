@@ -1,21 +1,21 @@
-package com.martinps.request;
+package com.martinps.dto.response;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-
-public class ProductoRequest {
-    @NotBlank
+public class ProductoResponse {
+    private Long id;
     private String nombre;
-
-    @Min(0)
-    private double precio;
-
     private String descripcion;
+    private double precio;
     private String categoria;
     private String imagenUrl;
-
-    @Min(0)
     private int stock;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getNombre() {
         return nombre;
@@ -25,20 +25,20 @@ public class ProductoRequest {
         this.nombre = nombre;
     }
 
-    public double getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(double precio) {
-        this.precio = precio;
-    }
-
     public String getDescripcion() {
         return descripcion;
     }
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
     }
 
     public String getCategoria() {
@@ -65,4 +65,3 @@ public class ProductoRequest {
         this.stock = stock;
     }
 }
-

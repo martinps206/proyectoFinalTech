@@ -1,21 +1,23 @@
-package com.martinps.response;
+package com.martinps.dto.request;
 
-public class ProductoResponse {
-    private Long id;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+public class ProductoRequest {
+    @NotBlank
+    @Size(max = 100)
     private String nombre;
-    private String descripcion;
+
+    @Min(0)
     private double precio;
+
+    private String descripcion;
     private String categoria;
     private String imagenUrl;
+
+    @Min(0)
     private int stock;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getNombre() {
         return nombre;
@@ -25,20 +27,20 @@ public class ProductoResponse {
         this.nombre = nombre;
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
     public double getPrecio() {
         return precio;
     }
 
     public void setPrecio(double precio) {
         this.precio = precio;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public String getCategoria() {
@@ -65,3 +67,4 @@ public class ProductoResponse {
         this.stock = stock;
     }
 }
+

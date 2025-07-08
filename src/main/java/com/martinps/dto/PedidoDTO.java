@@ -1,6 +1,7 @@
 package com.martinps.dto;
 
 import com.martinps.model.EstadoPedido;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ public class PedidoDTO {
     private EstadoPedido estado;
     @NotEmpty
     List<LineaPedidoDTO> lineas;
+    @Min(0)
     private double total;
 
     public Long getId() {

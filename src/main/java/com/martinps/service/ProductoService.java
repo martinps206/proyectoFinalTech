@@ -1,8 +1,10 @@
 package com.martinps.service;
 
+import com.martinps.dto.request.ProductoRequest;
 import com.martinps.exception.ResourceNotFoundException;
 import com.martinps.model.Producto;
 import com.martinps.repository.ProductoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,6 +32,12 @@ public class ProductoService {
     }
 
     public Producto actualizar(Long id, Producto nuevo) {
+        if (nuevo.getPrecio() < 0) {
+            throw new IllegalArgumentException("El precio no puede ser negativo");
+        }
+        if (nuevo.getStock() < 0) {
+            throw new IllegalArgumentException("El stock no puede ser negativo");
+        }
         Producto p = buscarPorId(id);
         p.setNombre(nuevo.getNombre());
         p.setDescripcion(nuevo.getDescripcion());
@@ -40,7 +48,27 @@ public class ProductoService {
         return repo.save(p);
     }
 
-    public void eliminar(Long id) {
-        repo.deleteById(id);
+
+    @Transactional
+    public Producto actualizar(Long id, ProductoRequest request) {
+        Producto existente = repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado"));
+
+        existente.setNombre(request.getNombre());
+        existente.setDescripcion(request.getDescripcion());
+        existente.setPrecio(request.getPrecio());
+        existente.setStock(request.getStock());
+        existente.setCategoria(request.getCategoria());
+        existente.setImagenUrl(request.getImagenUrl());
+
+        return repo.save(existente);
     }
+
+    @Transactional
+    public void eliminar(Long id) {
+        Producto producto = repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado"));
+        repo.delete(producto);
+    }
+
 }

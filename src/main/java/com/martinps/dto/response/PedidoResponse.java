@@ -1,5 +1,6 @@
-package com.martinps.response;
+package com.martinps.dto.response;
 
+import com.martinps.dto.LineaPedidoDTO;
 import com.martinps.model.EstadoPedido;
 import com.martinps.model.Pedido;
 
@@ -10,7 +11,7 @@ public class PedidoResponse {
     private Long id;
     private LocalDateTime fecha;
     private EstadoPedido estado;
-    private List<Pedido> lineas;
+    private List<LineaPedidoDTO> lineas;
 
     public Long getId() {
         return id;
@@ -36,11 +37,11 @@ public class PedidoResponse {
         this.estado = estado;
     }
 
-    public List<Pedido> getLineas() {
+    public List<LineaPedidoDTO> getLineas() {
         return lineas;
     }
 
-    public void setLineas(List<Pedido> lineas) {
+    public void setLineas(List<LineaPedidoDTO> lineas) {
         this.lineas = lineas;
     }
 }

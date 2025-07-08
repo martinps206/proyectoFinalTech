@@ -1,4 +1,4 @@
-package com.martinps.response;
+package com.martinps.dto.response;
 
 import java.time.LocalDateTime;
 
@@ -7,7 +7,10 @@ public class ErrorResponse {
     private String message;
     private LocalDateTime timestamp;
 
-    public ErrorResponse(boolean b, String msg, LocalDateTime now) {
+    public ErrorResponse(boolean success, String message, LocalDateTime timestamp) {
+        this.success = success;
+        this.message = message;
+        this.timestamp = timestamp;
     }
 
     public boolean isSuccess() {

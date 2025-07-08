@@ -12,14 +12,21 @@ public class LineaPedido {
     @ManyToOne
     private Producto producto;
 
+    @ManyToOne
+    @JoinColumn(name = "pedido_id")
+    private Pedido pedido;
+
     private int cantidad;
 
-    public LineaPedido(Producto p, int cantidad) {
-    }
-
     public LineaPedido() {
-
     }
+
+    public LineaPedido(Producto p, int cantidad) {
+        this.producto = p;
+        this.cantidad = cantidad;
+    }
+
+    // Getters y Setters
 
     public Long getId() {
         return id;
@@ -35,6 +42,14 @@ public class LineaPedido {
 
     public void setProducto(Producto producto) {
         this.producto = producto;
+    }
+
+    public Pedido getPedido() {
+        return pedido;
+    }
+
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
     }
 
     public int getCantidad() {

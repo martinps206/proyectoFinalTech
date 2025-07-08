@@ -2,10 +2,12 @@ package com.martinps.controller;
 
 import com.martinps.config.ProductoMapper;
 import com.martinps.model.Producto;
-import com.martinps.request.ProductoRequest;
-import com.martinps.response.ProductoResponse;
+import com.martinps.dto.request.ProductoRequest;
+import com.martinps.dto.response.ProductoResponse;
 import com.martinps.service.ProductoService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,14 +26,30 @@ public class ProductoController {
     }
 
     @GetMapping
-    public List<ProductoResponse> listar() {
-        return service.listar().stream().map(mapper::toDto).toList();
+    public ResponseEntity<List<ProductoResponse>> listar() {
+        List<ProductoResponse> response = service.listar().stream().map(mapper::toDto).toList();
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    public ProductoResponse crear(@RequestBody @Valid ProductoRequest request) {
-        Producto p = mapper.toEntity(request);
-        Producto creado = service.guardar(p);
-        return mapper.toDto(creado);
+    public ResponseEntity<ProductoResponse> crear(@RequestBody @Valid ProductoRequest request) {
+        Producto producto = mapper.toEntity(request);
+        Producto creado = service.guardar(producto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toDto(creado));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductoResponse> actualizar(
+            @PathVariable Long id,
+            @RequestBody @Valid ProductoRequest request) {
+        Producto actualizado = service.actualizar(id, request);
+        return ResponseEntity.ok(mapper.toDto(actualizado));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        service.eliminar(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

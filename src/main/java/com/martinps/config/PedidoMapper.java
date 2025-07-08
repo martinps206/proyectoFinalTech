@@ -1,8 +1,8 @@
 package com.martinps.config;
 
 import com.martinps.model.Pedido;
-import com.martinps.request.PedidoRequest;
-import com.martinps.response.PedidoResponse;
+import com.martinps.dto.request.PedidoRequest;
+import com.martinps.dto.response.PedidoResponse;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

@@ -1,6 +1,7 @@
 package com.martinps.service;
 
-import com.martinps.dto.PedidoDTO;
+import com.martinps.dto.request.PedidoRequest;
+import com.martinps.exception.ResourceNotFoundException;
 import com.martinps.exception.StockInsuficienteException;
 import com.martinps.model.EstadoPedido;
 import com.martinps.model.LineaPedido;
@@ -8,10 +9,7 @@ import com.martinps.model.Pedido;
 import com.martinps.model.Producto;
 import com.martinps.repository.PedidoRepository;
 import jakarta.transaction.Transactional;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,7 +25,7 @@ public class PedidoService {
 
     @Transactional()
     public List<Pedido> listar() {
-        return pedidoRepo.findAll();
+        return pedidoRepo.findAllWithLineas();
     }
 
 
@@ -38,18 +36,49 @@ public class PedidoService {
         }
 
         for (LineaPedido linea : pedido.getLineas()) {
-            Producto p = productoService.buscarPorId(linea.getProducto().getId());
+            // Recuperar el producto gestionado por Hibernate
+            Producto producto = productoService.buscarPorId(linea.getProducto().getId());
 
-            if (p.getStock() < linea.getCantidad()) {
-                throw new StockInsuficienteException("Stock insuficiente para: " + p.getNombre());
+            // Asociar la instancia gestionada a la línea
+            linea.setProducto(producto);
+
+            // Verificar stock
+            if (producto.getStock() < linea.getCantidad()) {
+                throw new StockInsuficienteException("Stock insuficiente para el producto: " + producto.getNombre());
             }
-
-            p.setStock(p.getStock() - linea.getCantidad());
-            productoService.guardar(p);
         }
-
+        pedido.setEstado(EstadoPedido.PENDIENTE);
         return pedidoRepo.save(pedido);
     }
 
+    @Transactional
+    public Pedido actualizar(Long id, PedidoRequest request) {
+        Pedido existente = pedidoRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido no encontrado"));
+
+        existente.getLineas().clear();
+
+        List<LineaPedido> nuevasLineas = request.getLineas().stream()
+                .map(lineaReq -> {
+                    Producto producto = productoService.buscarPorId(lineaReq.getProducto().getId());
+                    LineaPedido linea = new LineaPedido();
+                    linea.setProducto(producto);
+                    linea.setCantidad(lineaReq.getCantidad());
+                    linea.setPedido(existente);
+                    return linea;
+                }).toList();
+
+        existente.setLineas(nuevasLineas);
+        existente.setEstado(EstadoPedido.PENDIENTE); // o el estado actual
+
+        return pedidoRepo.save(existente);
+    }
+
+    @Transactional
+    public void eliminar(Long id) {
+        Pedido pedido = pedidoRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido no encontrado"));
+        pedidoRepo.delete(pedido);
+    }
 
 }

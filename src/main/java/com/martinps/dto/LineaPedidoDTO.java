@@ -1,9 +1,10 @@
 package com.martinps.dto;
 
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 public class LineaPedidoDTO {
-
+    @NotNull
     private Long productoId;
     @Min(1) int cantidad;
 
