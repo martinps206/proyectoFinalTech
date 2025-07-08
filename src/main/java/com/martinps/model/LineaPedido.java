@@ -26,8 +26,6 @@ public class LineaPedido {
         this.cantidad = cantidad;
     }
 
-    // Getters y Setters
-
     public Long getId() {
         return id;
     }
