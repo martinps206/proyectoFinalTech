@@ -71,4 +71,14 @@ public class ProductoService {
         repo.delete(producto);
     }
 
+    public List<Producto> buscarPorCategoria(String categoria) {
+        return repo.findByCategoriaIgnoreCase(categoria);
+    }
+
+    public Producto actualizarStock(Long id, int nuevoStock) {
+        Producto producto = buscarPorId(id);
+        producto.setStock(nuevoStock);
+        return repo.save(producto);
+    }
+
 }

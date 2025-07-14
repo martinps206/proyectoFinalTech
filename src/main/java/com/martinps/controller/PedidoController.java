@@ -1,6 +1,7 @@
 package com.martinps.controller;
 
 import com.martinps.config.PedidoMapper;
+import com.martinps.model.EstadoPedido;
 import com.martinps.model.Pedido;
 import com.martinps.dto.request.PedidoRequest;
 import com.martinps.dto.response.PedidoResponse;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/pedidos")
@@ -51,5 +53,35 @@ public class PedidoController {
         service.eliminar(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/estado/{estado}")
+    public ResponseEntity<List<PedidoResponse>> buscarPorEstado(@PathVariable String estado) {
+        List<Pedido> pedidos = service.buscarPorEstado(EstadoPedido.valueOf(estado.toUpperCase()));
+        List<PedidoResponse> response = pedidos.stream().map(mapper::toDto).toList();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}/resumen")
+    public ResponseEntity<?> obtenerResumenPedido(@PathVariable Long id) {
+        Pedido pedido = service.buscarPorId(id);
+
+        int cantidadItems = pedido.getLineas().stream()
+                .mapToInt(lp -> lp.getCantidad())
+                .sum();
+
+        double total = pedido.getLineas().stream()
+                .mapToDouble(lp -> lp.getProducto().getPrecio() * lp.getCantidad())
+                .sum();
+
+        return ResponseEntity.ok(Map.of(
+                "pedidoId", pedido.getId(),
+                "fecha", pedido.getFecha(),
+                "estado", pedido.getEstado(),
+                "cantidadItems", cantidadItems,
+                "total", total
+        ));
+    }
+
+
 
 }

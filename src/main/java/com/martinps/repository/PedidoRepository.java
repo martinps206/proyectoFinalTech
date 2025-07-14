@@ -1,5 +1,6 @@
 package com.martinps.repository;
 
+import com.martinps.model.EstadoPedido;
 import com.martinps.model.Pedido;
 import com.martinps.model.Producto;
 import jakarta.persistence.LockModeType;
@@ -17,5 +18,8 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
     @Query("SELECT DISTINCT p FROM Pedido p LEFT JOIN FETCH p.lineas")
     List<Pedido> findAllWithLineas();
+
+    List<Pedido> findByEstado(EstadoPedido estado);
+
 
 }

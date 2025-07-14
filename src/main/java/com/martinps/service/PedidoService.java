@@ -81,4 +81,13 @@ public class PedidoService {
         pedidoRepo.delete(pedido);
     }
 
+    public Pedido buscarPorId(Long id) {
+        return pedidoRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido no encontrado con ID: " + id));
+    }
+
+    public List<Pedido> buscarPorEstado(EstadoPedido estado) {
+        return pedidoRepo.findByEstado(estado);
+    }
+
 }

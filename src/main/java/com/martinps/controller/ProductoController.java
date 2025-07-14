@@ -52,4 +52,20 @@ public class ProductoController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/categoria/{categoria}")
+    public ResponseEntity<List<ProductoResponse>> buscarPorCategoria(@PathVariable String categoria) {
+        List<Producto> productos = service.buscarPorCategoria(categoria.toUpperCase());
+        List<ProductoResponse> response = productos.stream().map(mapper::toDto).toList();
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{id}/stock")
+    public ResponseEntity<ProductoResponse> actualizarStock(
+            @PathVariable Long id,
+            @RequestParam("stock") int nuevoStock) {
+        Producto actualizado = service.actualizarStock(id, nuevoStock);
+        return ResponseEntity.ok(mapper.toDto(actualizado));
+    }
+
+
 }
